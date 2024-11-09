@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_16_cart_ui/model/shop_model.dart';
 import 'package:http/http.dart' as http;
@@ -55,9 +54,13 @@ class HomeController with ChangeNotifier {
   }
 
   onCategorySelection(int index) {
-    //to change colors based on the selected index
+    //avoid rebuilding if the selectedindex is selected && avoid loading when another page is loading
+    if(selectedCategoryIndex!=index && isloading==false) {
+      //to change colors based on the selected index
     selectedCategoryIndex = index;
     notifyListeners();
     getAllProducts();
+    }
+    
   }
 }
