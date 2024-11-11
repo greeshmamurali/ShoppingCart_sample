@@ -269,11 +269,11 @@ class _ProductdetailsState extends State<Productdetails> {
             ),
             Expanded(
               child: InkWell(
-                onTap: () {
+                onTap: () async {
                   final selectedProduct =
                       context.read<ProductdetailsController>().product!;
                   
-                    context.read<CartController>().addProduct(selectedProduct);
+                     await context.read<CartController>().addProduct(selectedProduct);
                     
                   
                   Navigator.push(

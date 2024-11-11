@@ -16,7 +16,9 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
+       
         await context.read<CartController>().getProduct();
+      
       },
     );
     super.initState();
@@ -76,30 +78,44 @@ class _CartScreenState extends State<CartScreen> {
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                'price',
+                                context.watch<CartController>().selectedProductList[index]['price'].toString(),
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 18,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.bold),
                               ),
+                              SizedBox(height: 5,),
                               Row(
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: Colorconstants.iconButton,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.black,
+                                  InkWell(
+                                    onTap: () => context
+                                        .read<CartController>()
+                                        .incrementQty(
+                                            context
+                                                    .read<CartController>()
+                                                    .selectedProductList[index]
+                                                ['id'],
+                                            context
+                                                    .read<CartController>()
+                                                    .selectedProductList[index]
+                                                ['qty']),
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: Colorconstants.iconButton,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Container(
-                                    padding: EdgeInsets.all(6),
+                                    padding: EdgeInsets.symmetric(horizontal: 9,vertical: 6),
                                     decoration: BoxDecoration(
                                         color: Colorconstants.iconButton,
                                         borderRadius:
@@ -117,15 +133,25 @@ class _CartScreenState extends State<CartScreen> {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        color: Colorconstants.iconButton,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Icon(
-                                      Icons.remove,
-                                      color: Colors.black,
+                                  InkWell(
+                                    onTap: () => context.read<CartController>().decrementQty(context
+                                                    .read<CartController>()
+                                                    .selectedProductList[index]
+                                                ['id'],
+                                            context
+                                                    .read<CartController>()
+                                                    .selectedProductList[index]
+                                                ['qty']),
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: Colorconstants.iconButton,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Icon(
+                                        Icons.remove,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                   Spacer(),
@@ -158,6 +184,39 @@ class _CartScreenState extends State<CartScreen> {
                     context.watch<CartController>().selectedProductList.length),
           )
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Total Price :',
+                style: TextStyle(
+                  color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18
+                ),),
+                Text(context.watch<CartController>().totalCartValue.toString(),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,fontSize: 15
+                ),)
+              ],
+            ),
+
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 25,vertical: 15),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(10)
+              ),
+              child: Text('CheckOut',
+              style: TextStyle(
+                color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20
+              ),),
+            )
+          ],
+        ),
       ),
     );
   }
