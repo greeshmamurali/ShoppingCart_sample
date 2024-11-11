@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_16_cart_ui/controller/cart_controller.dart';
 import 'package:flutter_16_cart_ui/controller/home_controller.dart';
 
 import 'package:flutter_16_cart_ui/view/productdetails/productdetails.dart';
@@ -16,9 +17,9 @@ class _HomescreenState extends State<Homescreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await context.read<CartController>().initDb();
       await context.read<HomeController>().getCategories();
       await context.read<HomeController>().getAllProducts();
-      
     });
   }
 
@@ -185,9 +186,6 @@ class _HomescreenState extends State<Homescreen> {
                                           .shopObj[index]
                                           .id !=
                                       null) {
-                                    
-                           
-
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -197,9 +195,6 @@ class _HomescreenState extends State<Homescreen> {
                                                   .shopObj[index]
                                                   .id!),
                                         ));
-
-                                 
-                                   
                                   }
                                 },
                                 child: Container(

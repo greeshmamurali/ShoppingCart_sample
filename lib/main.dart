@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_16_cart_ui/controller/cart_controller.dart';
 import 'package:flutter_16_cart_ui/controller/home_controller.dart';
 import 'package:flutter_16_cart_ui/controller/productdetails_controller.dart';
 import 'package:flutter_16_cart_ui/view/getstart/getstart.dart';
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => HomeController(),),
-        ChangeNotifierProvider(create: (context) => ProductdetailsController(),)
+        ChangeNotifierProvider(create: (context) => ProductdetailsController(),),
+        ChangeNotifierProvider(create: (context) => CartController(),)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
