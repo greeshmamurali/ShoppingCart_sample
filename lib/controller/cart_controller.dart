@@ -83,4 +83,9 @@ class CartController with ChangeNotifier {
     }
     totalCartValue = double.parse(totalCartValue.toStringAsFixed(2));
   }
+
+  //to remove items from db after successfull payment
+  Future clearTable() async {
+    await database.delete('Cart');
+  }
 }

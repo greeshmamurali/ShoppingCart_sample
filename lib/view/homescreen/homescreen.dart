@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_16_cart_ui/controller/cart_controller.dart';
 import 'package:flutter_16_cart_ui/controller/home_controller.dart';
+import 'package:flutter_16_cart_ui/view/cart_screen/cart_screen.dart';
 
 import 'package:flutter_16_cart_ui/view/productdetails/productdetails.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,12 @@ class _HomescreenState extends State<Homescreen> {
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 27),
         ),
         actions: [
+          InkWell(
+            onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => CartScreen(),)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.shopping_cart,color: Colors.black,),
+            )),
           Stack(
             children: [
               Icon(

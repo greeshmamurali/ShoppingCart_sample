@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_16_cart_ui/controller/cart_controller.dart';
 
 import 'package:flutter_16_cart_ui/utils/colorConstants.dart';
+import 'package:flutter_16_cart_ui/view/payment_success_screen/payment_success_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_web/razorpay_web.dart';
 
@@ -17,9 +18,7 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
-       
         await context.read<CartController>().getProduct();
-      
       },
     );
     super.initState();
@@ -79,13 +78,18 @@ class _CartScreenState extends State<CartScreen> {
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                context.watch<CartController>().selectedProductList[index]['price'].toString(),
+                                context
+                                    .watch<CartController>()
+                                    .selectedProductList[index]['price']
+                                    .toString(),
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 5,),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Row(
                                 children: [
                                   InkWell(
@@ -116,7 +120,8 @@ class _CartScreenState extends State<CartScreen> {
                                     width: 10,
                                   ),
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 9,vertical: 6),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 9, vertical: 6),
                                     decoration: BoxDecoration(
                                         color: Colorconstants.iconButton,
                                         borderRadius:
@@ -135,7 +140,10 @@ class _CartScreenState extends State<CartScreen> {
                                     width: 10,
                                   ),
                                   InkWell(
-                                    onTap: () => context.read<CartController>().decrementQty(context
+                                    onTap: () => context
+                                        .read<CartController>()
+                                        .decrementQty(
+                                            context
                                                     .read<CartController>()
                                                     .selectedProductList[index]
                                                 ['id'],
@@ -193,18 +201,22 @@ class _CartScreenState extends State<CartScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Total Price :',
-                style: TextStyle(
-                  color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18
-                ),),
-                Text(context.watch<CartController>().totalCartValue.toString(),
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,fontSize: 15
-                ),)
+                Text(
+                  'Total Price :',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+                Text(
+                  context.watch<CartController>().totalCartValue.toString(),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
+                )
               ],
             ),
-
             InkWell(
               onTap: () {
                 Razorpay razorpay = Razorpay();
@@ -223,17 +235,32 @@ class _CartScreenState extends State<CartScreen> {
                     'wallets': ['paytm']
                   }
                 };
+                razorpay.on(
+                  Razorpay.EVENT_PAYMENT_ERROR,
+                  handlePaymentErrorResponse,
+                );
+                razorpay.on(
+                  Razorpay.EVENT_PAYMENT_SUCCESS,
+                  handlePaymentSuccessResponse,
+                );
+                razorpay.on(
+                  Razorpay.EVENT_EXTERNAL_WALLET,
+                  handleExternalWalletSelected,
+                );
+                razorpay.open(options);
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 25,vertical: 15),
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                 decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10)
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Text(
+                  'CheckOut',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
                 ),
-                child: Text('CheckOut',
-                style: TextStyle(
-                  color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20
-                ),),
               ),
             )
           ],
@@ -242,7 +269,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-   void handlePaymentErrorResponse(PaymentFailureResponse response) {
+  void handlePaymentErrorResponse(PaymentFailureResponse response) {
     // PaymentFailureResponse contains three values:
     // 1. Error Code
     // 2. Error Description
@@ -261,11 +288,14 @@ class _CartScreenState extends State<CartScreen> {
     // 1. Order ID
     // 2. Payment ID
     // 3. Signature
-    showAlertDialog(
+    Navigator.pushAndRemoveUntil(
       context,
-      'Payment Successful',
-      'Payment ID: ${response.paymentId}',
+      MaterialPageRoute(
+        builder: (context) => PaymentSuccessScreen(),
+      ),
+      (route) => false,
     );
+    context.read<CartController>().clearTable();
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {
